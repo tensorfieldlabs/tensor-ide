@@ -57,8 +57,8 @@ export default function App() {
   const [termOpen, setTermOpen] = useState(!IS_PHONE && window.innerHeight >= 600);
   const [explorerOpen, setExplorerOpen] = useState(!IS_PHONE && window.innerWidth >= 800);
   const [tensorOpen, setTensorOpen] = useState(IS_PHONE || window.innerWidth >= 1100);
-  const [pairMode, setPairMode] = useState(false);
-  const [pairExiting, setPairExiting] = useState(false);
+  const [twinMode, setTwinMode] = useState(false);
+  const [twinExiting, setTwinExiting] = useState(false);
   const [agentFile, setAgentFile] = useState<OpenFile | null>(null);
   const [agentCommand, setAgentCommand] = useState<{ cmd: string; output: string } | null>(null);
 
@@ -69,7 +69,7 @@ export default function App() {
     const handleResize = () => {
       const width = window.innerWidth;
       const height = window.innerHeight;
-      if (lastWidth >= 1100 && width < 1100) { setTensorOpen(false); setPairMode(false); }
+      if (lastWidth >= 1100 && width < 1100) { setTensorOpen(false); setTwinMode(false); }
       if (lastWidth >= 800 && width < 800) setExplorerOpen(false);
       if (lastHeight >= 600 && height < 600) setTermOpen(false);
       if (lastWidth < 1100 && width >= 1100) setTensorOpen(true);
@@ -138,8 +138,8 @@ export default function App() {
         termOpen={termOpen}
         explorerOpen={explorerOpen}
         tensorOpen={tensorOpen}
-        pairMode={pairMode}
-        showPair={pairMode || (explorerOpen && tensorOpen)}
+        twinMode={twinMode}
+        showTwin={twinMode || (explorerOpen && tensorOpen)}
         onToggleTerm={() => setTermOpen(o => !o)}
         onToggleExplorer={() => setExplorerOpen(o => {
           const next = !o;
@@ -151,18 +151,18 @@ export default function App() {
           if (next && window.innerWidth < 1100) setExplorerOpen(false);
           return next;
         })}
-        onTogglePair={() => {
-          if (pairMode) {
-            setPairExiting(true);
-            setTimeout(() => { setPairMode(false); setPairExiting(false); }, 550);
+        onToggleTwin={() => {
+          if (twinMode) {
+            setTwinExiting(true);
+            setTimeout(() => { setTwinMode(false); setTwinExiting(false); }, 550);
           } else {
-            setPairMode(true);
+            setTwinMode(true);
           }
         }}
       />
-      {pairMode ? (
-        <div className="ide-pair-split">
-          <div className={`ide-pair-left ${pairExiting ? "exiting" : ""}`}>
+      {twinMode ? (
+        <div className="ide-twin-split">
+          <div className={`ide-twin-left ${twinExiting ? "exiting" : ""}`}>
             <IdePane
               initialCwd="/"
               hideTensor
@@ -171,8 +171,8 @@ export default function App() {
               agentCommand={agentCommand}
             />
           </div>
-          <div className={`ide-pair-divider ${pairExiting ? "exiting" : ""}`} />
-          <div className={`ide-pair-right ${pairExiting ? "exiting" : ""}`}>
+          <div className={`ide-twin-divider ${twinExiting ? "exiting" : ""}`} />
+          <div className={`ide-twin-right ${twinExiting ? "exiting" : ""}`}>
             <IdePane
               initialCwd="/"
               onAgentFile={(path, content) => setAgentFile({ path, content, lang: langFromPath(path) })}

@@ -3,17 +3,17 @@ interface Props {
   termOpen: boolean;
   explorerOpen: boolean;
   tensorOpen: boolean;
-  pairMode: boolean;
-  showPair: boolean;
+  twinMode: boolean;
+  showTwin: boolean;
   onToggleTerm: () => void;
   onToggleExplorer: () => void;
   onToggleTensor: () => void;
-  onTogglePair: () => void;
+  onToggleTwin: () => void;
 }
 
 export function Titlebar({
-  logoSrc, termOpen, explorerOpen, tensorOpen, pairMode, showPair,
-  onToggleTerm, onToggleExplorer, onToggleTensor, onTogglePair,
+  logoSrc, termOpen, explorerOpen, tensorOpen, twinMode, showTwin,
+  onToggleTerm, onToggleExplorer, onToggleTensor, onToggleTwin,
 }: Props) {
   return (
     <div className="titlebar">
@@ -21,15 +21,15 @@ export function Titlebar({
         <img src={logoSrc} alt="" className="titlebar-icon" />
       </div>
       <div style={{ flex: 1 }} />
-      {!pairMode && (
+      {!twinMode && (
         <>
           <button className={`titlebar-btn ${explorerOpen ? "active" : ""}`} onClick={onToggleExplorer}>Files</button>
           <button className={`titlebar-btn ${termOpen ? "active" : ""}`} onClick={onToggleTerm}>Terminal</button>
           <button className={`titlebar-btn ${tensorOpen ? "active" : ""}`} onClick={onToggleTensor}>Tensor</button>
         </>
       )}
-      {showPair && (
-        <button className={`titlebar-btn ${pairMode ? "active" : ""}`} onClick={onTogglePair}>Twin</button>
+      {showTwin && (
+        <button className={`titlebar-btn ${twinMode ? "active" : ""}`} onClick={onToggleTwin}>Twin</button>
       )}
     </div>
   );

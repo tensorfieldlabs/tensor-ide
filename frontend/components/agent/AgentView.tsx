@@ -139,7 +139,7 @@ export function AgentView({ state }: Props) {
           </div>
         )}
         <div className="agent-badge-wrap">
-          <span className="agent-badge">pair</span>
+          <span className="agent-badge">twin</span>
         </div>
       </div>
 

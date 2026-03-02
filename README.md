@@ -20,7 +20,7 @@
 - **Code editor** — Monaco with syntax highlighting
 - **Terminal** — WebSocket PTY
 - **File explorer** — full filesystem access
-- **Pair mode** — dual IDE panes with agent + human side by side
+- **Twin mode** — dual IDE panes with agent + human side by side
 - **ML viewers** — images, video, CSV, Jupyter notebooks, GGUF/safetensors
 
 ## Setup
