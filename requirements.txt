@@ -1,0 +1,11 @@
+fastapi
+httpx
+mcp
+model2vec
+numpy
+playwright
+ptyprocess
+pydantic
+uvicorn[standard]
+watchfiles
+websockets

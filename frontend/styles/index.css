@@ -1,0 +1,120 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Original warm background + cool neutral UI */
+  --bg-gradient:
+    radial-gradient(
+      circle at 10% 40%,
+      rgba(180, 70, 80, 0.25),
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 90% 20%,
+      rgba(245, 158, 11, 0.2),
+      transparent 45%
+    ),
+    radial-gradient(circle at 50% 100%, rgba(70, 40, 120, 0.3), transparent 60%);
+
+  --bg-base: #0a0808;
+
+  --glass-bg: rgba(22, 22, 28, 0.5);
+  --glass-bg-hover: rgba(34, 34, 42, 0.6);
+  --glass-bg-active: rgba(48, 48, 58, 0.55);
+
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-border-light: rgba(255, 255, 255, 0.14);
+
+  --glass-shadow:
+    0 12px 32px 0 rgba(0, 0, 0, 0.5), 0 2px 8px 0 rgba(0, 0, 0, 0.2),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.1);
+
+  --text: rgba(255, 255, 255, 0.95);
+  --text2: rgba(255, 255, 255, 0.65);
+  --text3: rgba(255, 255, 255, 0.4);
+
+  --accent: #a0b4ff; /* Cool soft blue */
+  --accent-glow: rgba(160, 180, 255, 0.35);
+
+  --grad: linear-gradient(135deg, #a0b4ff 0%, #c4b5fd 100%); /* Blue to lavender */
+
+  --font:
+    -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
+  --mono: "SF Mono", "JetBrains Mono", ui-monospace, monospace;
+
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  background-color: var(--bg-base);
+  background-image: var(--bg-gradient);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Base Glass pane class */
+.glass-pane {
+  background: var(--glass-bg);
+  backdrop-filter: blur(54px) saturate(200%);
+  -webkit-backdrop-filter: blur(54px) saturate(200%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: var(--radius);
+}
+
+#root {
+  position: relative;
+  z-index: 1;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border: 3px solid transparent;
+  background-clip: padding-box;
+  border-radius: 12px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+
+button,
+input,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  outline: none;
+}
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+}
