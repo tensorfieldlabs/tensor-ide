@@ -51,8 +51,8 @@ export default function App() {
 
   useEffect(() => {
     const handler = () => setSessionExpired(true);
-    window.addEventListener("hogue:session-expired", handler);
-    return () => window.removeEventListener("hogue:session-expired", handler);
+    window.addEventListener("tensor:session-expired", handler);
+    return () => window.removeEventListener("tensor:session-expired", handler);
   }, []);
   const [termOpen, setTermOpen] = useState(!IS_PHONE && window.innerHeight >= 600);
   const [explorerOpen, setExplorerOpen] = useState(!IS_PHONE && window.innerWidth >= 800);

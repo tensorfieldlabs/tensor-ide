@@ -34,7 +34,7 @@ _ALLOWED_ORIGINS = [
     "http://127.0.0.1:5173",
 ]
 
-_PIN_FILE   = Path.home() / ".hogue" / "ide_pin"
+_PIN_FILE   = Path.home() / ".tensor" / "ide_pin"
 _COOKIE     = "hogue_session"
 _NO_AUTH    = {"/api/login", "/api/logout", "/api/auth_status", "/robots.txt"}
 

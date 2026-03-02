@@ -1,4 +1,4 @@
-"""Groq provider — OpenAI-compatible API, key at ~/.hogue/groq_key."""
+"""Groq provider — OpenAI-compatible API, key at ~/.tensor/groq_key."""
 from __future__ import annotations
 
 import json
@@ -9,7 +9,7 @@ import httpx
 
 from . import Provider, sse_delta, sse_tool_start, sse_tool_end, _smart_truncate
 
-_KEY_PATH = Path.home() / ".hogue" / "groq_key"
+_KEY_PATH = Path.home() / ".tensor" / "groq_key"
 _API_BASE = "https://api.groq.com/openai/v1"
 
 _MODELS = [

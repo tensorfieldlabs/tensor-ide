@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any
 
 # Privacy-first default: disabled unless explicitly enabled.
-_BEHAVIOR_ENABLED = os.environ.get("HOGUE_BEHAVIOR_LOGGING", "0").lower() in {"1", "true", "yes"}
+_BEHAVIOR_ENABLED = os.environ.get("TENSOR_BEHAVIOR_LOGGING", "0").lower() in {"1", "true", "yes"}
 _BASE_DIR = Path.home() / ".tensor" / "identity"
 _EVENTS_FILE = _BASE_DIR / "events.jsonl"
 _LOCK = threading.Lock()
