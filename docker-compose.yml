@@ -1,0 +1,13 @@
+services:
+  tensor-ide:
+    build: .
+    ports:
+      - "41900:41900"
+    volumes:
+      - ~/.tensor:/root/.tensor
+      - ~/.gemini:/root/.gemini
+      - ~/models:/app/models
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DOCKER=1
+    restart: unless-stopped

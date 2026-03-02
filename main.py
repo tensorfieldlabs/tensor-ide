@@ -231,4 +231,5 @@ else:
 
 if __name__ == "__main__":
     print(f"\n  tensor-ide  http://0.0.0.0:{PORT}\n", flush=True)
-    uvicorn.run("main:app", host="127.0.0.1", port=PORT, reload=True, reload_dirs=["backend"])
+    host = "0.0.0.0" if os.environ.get("DOCKER") else "127.0.0.1"
+    uvicorn.run("main:app", host=host, port=PORT, reload=not os.environ.get("DOCKER"), reload_dirs=["backend"])

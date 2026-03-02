@@ -25,6 +25,12 @@
 
 ## Setup
 
+**Docker (recommended):**
+```bash
+docker compose up --build
+```
+
+**Manual:**
 ```bash
 pip install -r requirements.txt
 pnpm install && pnpm build
