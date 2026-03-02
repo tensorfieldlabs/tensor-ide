@@ -31,7 +31,7 @@ const PROVIDER_LABEL: Record<string, string> = {
   claude: "Anthropic",
   gemini: "Google",
   groq: "Groq",
-  local_mlx: "Local",
+  ollama: "Local",
 };
 
 function groupModels(models: ModelEntry[]) {

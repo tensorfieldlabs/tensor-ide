@@ -1,4 +1,4 @@
-"""Local MLX model provider — auto-discovers and serves models from hogue-ide/models/."""
+"""Local/Ollama model provider — auto-discovers and serves models from tensor-ide/models/."""
 from __future__ import annotations
 
 import threading
@@ -52,8 +52,8 @@ def _load(model_name: str):
             raise
 
 
-class LocalMLXProvider(Provider):
-    name = "local"
+class OllamaProvider(Provider):
+    name = "ollama"
 
     def is_available(self) -> bool:
         return bool(_discover_models())

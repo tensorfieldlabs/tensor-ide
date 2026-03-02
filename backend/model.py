@@ -1,4 +1,4 @@
-"""Unified model router — dispatches to Claude, Gemini, Groq, or local MLX."""
+"""Unified model router — dispatches to Claude, Gemini, Groq, or Ollama."""
 from __future__ import annotations
 
 import json
@@ -8,7 +8,7 @@ from .providers import sse_delta, sse_done, sse_tool_start, sse_tool_end, _smart
 from .providers.claude import ClaudeProvider
 from .providers.gemini import GeminiProvider
 from .providers.groq import GroqProvider
-from .providers.local_mlx import LocalMLXProvider
+from .providers.ollama import OllamaProvider
 from .tool_client import get_tool_client
 
 # --- Provider registry ---
@@ -16,7 +16,7 @@ from .tool_client import get_tool_client
 _claude = ClaudeProvider()
 _gemini = GeminiProvider()
 _groq = GroqProvider()
-_local = LocalMLXProvider()
+_local = OllamaProvider()
 
 _ALL_PROVIDERS = [_claude, _gemini, _groq, _local]
 
