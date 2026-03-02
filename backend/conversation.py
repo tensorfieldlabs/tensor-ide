@@ -132,7 +132,7 @@ class Conversation:
             msgs: list[dict] = []
             if retrieved:
                 ctx = "\n".join(
-                    f"{'User' if t.role == 'user' else 'Hogue'}: {t.text[:600]}"
+                    f"{'User' if t.role == 'user' else 'Tensor'}: {t.text[:600]}"
                     for t in retrieved
                 )
                 msgs.append({"role": "user", "content":
@@ -155,7 +155,7 @@ class Conversation:
                 retrieved = self._retrieve(query, older, _RETRIEVE_K)
                 if retrieved:
                     ctx = "\n".join(
-                        f"{'User' if t.role == 'user' else 'Hogue'}: {t.text[:600]}"
+                        f"{'User' if t.role == 'user' else 'Tensor'}: {t.text[:600]}"
                         for t in retrieved
                     )
                     parts.append(f"[Relevant context from earlier]\n{ctx}\n[End context]")
@@ -164,7 +164,7 @@ class Conversation:
                 turns_to_show = self.turns
 
             for t in turns_to_show:
-                parts.append(f"{'User' if t.role == 'user' else 'Hogue'}: {t.text}")
+                parts.append(f"{'User' if t.role == 'user' else 'Tensor'}: {t.text}")
             return "\n\n".join(parts)
 
     # ── Persistence ────────────────────────────────────────────────

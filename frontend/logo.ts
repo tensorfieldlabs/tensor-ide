@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 function urlFor(version: string): string {
-  return `/hogue.svg?v=${encodeURIComponent(version || "0")}`;
+  return `/tensor.svg?v=${encodeURIComponent(version || "0")}`;
 }
 
 export function useLiveLogoSrc(pollMs = 4000): string {

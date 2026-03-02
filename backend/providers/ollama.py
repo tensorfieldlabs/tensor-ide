@@ -7,7 +7,7 @@ from typing import Iterator
 
 from . import Provider, sse_delta
 
-# Models live next to the hogue-ide package: hogue-ide/models/
+# Models live next to the tensor-ide package: tensor-ide/models/
 _MODELS_DIR = Path(__file__).parent.parent.parent / "models"
 
 _lock = threading.Lock()

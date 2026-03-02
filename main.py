@@ -35,7 +35,7 @@ _ALLOWED_ORIGINS = [
 ]
 
 _PIN_FILE   = Path.home() / ".tensor" / "ide_pin"
-_COOKIE     = "hogue_session"
+_COOKIE     = "tensor_session"
 _NO_AUTH    = {"/api/login", "/api/logout", "/api/auth_status", "/robots.txt"}
 
 # ── PIN bootstrap ──────────────────────────────────────────────────────────────
@@ -172,9 +172,9 @@ async def api_auth_status(request: Request):
 
 @app.get("/api/logo_version")
 def api_logo_version():
-    logo = STATIC / "hogue.svg"
+    logo = STATIC / "tensor.svg"
     if not logo.exists():
-        logo = Path(__file__).parent / "public" / "hogue.svg"
+        logo = Path(__file__).parent / "public" / "tensor.svg"
     version = str(logo.stat().st_mtime_ns) if logo.exists() else "0"
     return {"version": version}
 

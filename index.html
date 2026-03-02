@@ -2,24 +2,24 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link id="app-favicon" rel="icon" type="image/svg+xml" href="/hogue.svg?v=boot" />
+    <link id="app-favicon" rel="icon" type="image/svg+xml" href="/tensor.svg?v=boot" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <meta name="theme-color" content="#0a0808" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <title>hogue-ide</title>
+    <title>tensor-ide</title>
     <style>
       body { margin: 0; background: #0a0808; }
-      #hogue-splash {
+      #tensor-splash {
         position: fixed; inset: 0; z-index: 9999;
         display: flex; flex-direction: column;
         align-items: center; justify-content: center;
         background: #0a0808;
         transition: opacity 0.5s ease;
       }
-      #hogue-splash.fade { opacity: 0; pointer-events: none; }
-      #hogue-splash img { width: 72px; height: 72px; animation: splash-pulse 1.8s ease-in-out infinite; }
-      #hogue-splash span {
+      #tensor-splash.fade { opacity: 0; pointer-events: none; }
+      #tensor-splash img { width: 72px; height: 72px; animation: splash-pulse 1.8s ease-in-out infinite; }
+      #tensor-splash span {
         margin-top: 16px; font-family: -apple-system, BlinkMacSystemFont, sans-serif;
         font-size: 13px; font-weight: 800; letter-spacing: 0.25em;
         background: linear-gradient(135deg, #a0b4ff, #c4b5fd);
@@ -32,7 +32,7 @@
     </style>
   </head>
   <body>
-    <div id="hogue-splash"><img id="hogue-splash-logo" src="/hogue.svg?v=boot" alt="H" /><span>HOGUE</span></div>
+    <div id="tensor-splash"><img id="tensor-splash-logo" src="/tensor.svg?v=boot" alt="H" /><span>TENSOR</span></div>
     <div id="root"></div>
     <script>
       (async function initLogoVersion() {
@@ -41,10 +41,10 @@
           if (!res.ok) return;
           const data = await res.json();
           const v = encodeURIComponent(String(data.version || Date.now()));
-          const logo = document.getElementById('hogue-splash-logo');
-          if (logo) logo.src = '/hogue.svg?v=' + v;
+          const logo = document.getElementById('tensor-splash-logo');
+          if (logo) logo.src = '/tensor.svg?v=' + v;
           const icon = document.getElementById('app-favicon');
-          if (icon) icon.href = '/hogue.svg?v=' + v;
+          if (icon) icon.href = '/tensor.svg?v=' + v;
         } catch {}
       })();
 
