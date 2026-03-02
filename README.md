@@ -20,7 +20,6 @@
 - **Code editor** — Monaco with syntax highlighting
 - **Terminal** — WebSocket PTY
 - **File explorer** — full filesystem access
-- **Browser** — embedded CDP headless Chromium
 - **Pair mode** — dual IDE panes with agent + human side by side
 - **ML viewers** — images, video, CSV, Jupyter notebooks, GGUF/safetensors
 
@@ -56,5 +55,4 @@ pnpm run dev:runtime
 | Frontend | React + Vite + Monaco |
 | AI | Claude, Gemini, Groq, Ollama |
 | Terminal | WebSocket PTY |
-| Browser | CDP headless Chromium |
 | Auth | PIN-based, 12-hour sessions |
