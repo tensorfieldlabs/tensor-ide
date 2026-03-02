@@ -1,7 +1,4 @@
 import { useState, useEffect } from "react";
-import { FileExplorer } from "./components/explorer/FileExplorer";
-import { CodeEditor } from "./components/editor/CodeEditor";
-import { Terminal } from "./components/terminal/Terminal";
 import { Titlebar } from "./components/titlebar/Titlebar";
 import { TensorPanel } from "./components/tensor/TensorPanel";
 import { IdePane } from "./components/pane/IdePane";
@@ -12,7 +9,7 @@ import "./styles/App.css";
 
 export type OpenFile = { path: string; content: string; lang: string };
 
-function langFromPath(path: string): string {
+export function langFromPath(path: string): string {
   const ext = path.split(".").pop() ?? "";
   const map: Record<string, string> = {
     ts: "typescript", tsx: "typescript", js: "javascript", jsx: "javascript",
@@ -38,8 +35,10 @@ export default function App() {
   const [authed, setAuthed] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
   const [sessionExpired, setSessionExpired] = useState(false);
-  const [openFile, setOpenFile] = useState<OpenFile | null>(null);
-  const [cwd, setCwd] = useState("/");
+  const [twinMode, setTwinMode] = useState(false);
+  const [twinExiting, setTwinExiting] = useState(false);
+  const [agentFile, setAgentFile] = useState<OpenFile | null>(null);
+  const [agentCommand, setAgentCommand] = useState<{ cmd: string; output: string } | null>(null);
   const logoSrc = useLiveLogoSrc();
 
   useEffect(() => {
@@ -54,70 +53,6 @@ export default function App() {
     window.addEventListener("tensor:session-expired", handler);
     return () => window.removeEventListener("tensor:session-expired", handler);
   }, []);
-  const [termOpen, setTermOpen] = useState(!IS_PHONE && window.innerHeight >= 600);
-  const [explorerOpen, setExplorerOpen] = useState(!IS_PHONE && window.innerWidth >= 800);
-  const [tensorOpen, setTensorOpen] = useState(IS_PHONE || window.innerWidth >= 1100);
-  const [twinMode, setTwinMode] = useState(false);
-  const [twinExiting, setTwinExiting] = useState(false);
-  const [agentFile, setAgentFile] = useState<OpenFile | null>(null);
-  const [agentCommand, setAgentCommand] = useState<{ cmd: string; output: string } | null>(null);
-
-  useEffect(() => {
-    if (IS_PHONE) return;
-    let lastWidth = window.innerWidth;
-    let lastHeight = window.innerHeight;
-    const handleResize = () => {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-      if (lastWidth >= 1100 && width < 1100) { setTensorOpen(false); setTwinMode(false); }
-      if (lastWidth >= 800 && width < 800) setExplorerOpen(false);
-      if (lastHeight >= 600 && height < 600) setTermOpen(false);
-      if (lastWidth < 1100 && width >= 1100) setTensorOpen(true);
-      if (lastWidth < 800 && width >= 800) setExplorerOpen(true);
-      if (lastHeight < 600 && height >= 600) setTermOpen(true);
-      lastWidth = width; lastHeight = height;
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  useEffect(() => {
-    if (IS_PHONE) return;
-    const handleDragOver = (e: DragEvent) => e.preventDefault();
-    const handleDrop = async (e: DragEvent) => {
-      e.preventDefault();
-      const file = e.dataTransfer?.files[0];
-      if (file) {
-        const text = await file.text();
-        setOpenFile({ path: file.name, content: text, lang: langFromPath(file.name) });
-      }
-    };
-    window.addEventListener("dragover", handleDragOver);
-    window.addEventListener("drop", handleDrop);
-    return () => {
-      window.removeEventListener("dragover", handleDragOver);
-      window.removeEventListener("drop", handleDrop);
-    };
-  }, []);
-
-  function handleOpen(filePath: string, content: string) {
-    setOpenFile(prev => prev?.path === filePath ? null : { path: filePath, content, lang: langFromPath(filePath) });
-  }
-
-  function handleSave(_path: string, content: string) {
-    setOpenFile(prev => prev ? { ...prev, content } : null);
-  }
-
-  async function handleFileChanged(path: string) {
-    setOpenFile(prev => {
-      if (!prev || prev.path !== path) return prev;
-      api.readFile(path).then(res => {
-        if (res.content !== undefined)
-          setOpenFile(p => p?.path === path ? { ...p, content: res.content! } : p);
-      });
-      return prev;
-    });
-  }
 
   if (!authChecked) return null;
   if (!authed) return <LoginScreen logoSrc={logoSrc} onLogin={() => setAuthed(true)} />;
@@ -135,22 +70,7 @@ export default function App() {
       {sessionExpired && <LoginScreen logoSrc={logoSrc} onLogin={() => { setAuthed(true); setSessionExpired(false); }} overlay />}
       <Titlebar
         logoSrc={logoSrc}
-        termOpen={termOpen}
-        explorerOpen={explorerOpen}
-        tensorOpen={tensorOpen}
         twinMode={twinMode}
-        showTwin={twinMode || (explorerOpen && tensorOpen)}
-        onToggleTerm={() => setTermOpen(o => !o)}
-        onToggleExplorer={() => setExplorerOpen(o => {
-          const next = !o;
-          if (next && window.innerWidth < 1100) setTensorOpen(false);
-          return next;
-        })}
-        onToggleTensor={() => setTensorOpen(o => {
-          const next = !o;
-          if (next && window.innerWidth < 1100) setExplorerOpen(false);
-          return next;
-        })}
         onToggleTwin={() => {
           if (twinMode) {
             setTwinExiting(true);
@@ -160,58 +80,27 @@ export default function App() {
           }
         }}
       />
-      {twinMode ? (
-        <div className="ide-twin-split">
-          <div className={`ide-twin-left ${twinExiting ? "exiting" : ""}`}>
-            <IdePane
-              initialCwd="/"
-              hideTensor
-              variant="agent"
-              agentFile={agentFile}
-              agentCommand={agentCommand}
-            />
-          </div>
-          <div className={`ide-twin-divider ${twinExiting ? "exiting" : ""}`} />
-          <div className={`ide-twin-right ${twinExiting ? "exiting" : ""}`}>
-            <IdePane
-              initialCwd="/"
-              onAgentFile={(path, content) => setAgentFile({ path, content, lang: langFromPath(path) })}
-              onAgentCommand={(cmd, output) => setAgentCommand({ cmd, output })}
-            />
-          </div>
-        </div>
-      ) : (
-        <div className="ide-body">
-          <FileExplorer
-            cwd={cwd}
-            onCwdChange={setCwd}
-            onOpen={handleOpen}
-            activeFile={openFile?.path ?? null}
-            hidden={!explorerOpen}
-          />
-          <div className="ide-center">
-            <div className="ide-editor">
-              <CodeEditor
-                file={openFile}
-                onSave={handleSave}
-                onOpenExplorer={() => setExplorerOpen(o => {
-                  const next = !o;
-                  if (next && window.innerWidth < 1100) setTensorOpen(false);
-                  return next;
-                })}
+      <div className={twinMode || twinExiting ? "ide-twin-split" : "ide-twin-wrap"}>
+        {(twinMode || twinExiting) && (
+          <>
+            <div className={`ide-twin-left ${twinExiting ? "exiting" : ""}`}>
+              <IdePane
+                initialCwd="/"
+                hideTensor
+                variant="agent"
+                agentFile={agentFile}
+                agentCommand={agentCommand}
               />
             </div>
-            <Terminal cwd={cwd} hidden={!termOpen} onClose={() => setTermOpen(false)} />
-          </div>
-          <TensorPanel
-            openFile={openFile}
-            cwd={cwd}
-            hidden={!tensorOpen}
-            onClose={() => setTensorOpen(false)}
-            onFileChanged={handleFileChanged}
-          />
-        </div>
-      )}
+            <div className={`ide-twin-divider ${twinExiting ? "exiting" : ""}`} />
+          </>
+        )}
+        <IdePane
+          initialCwd="/"
+          onAgentFile={(path, content) => setAgentFile({ path, content, lang: langFromPath(path) })}
+          onAgentCommand={(cmd, output) => setAgentCommand({ cmd, output })}
+        />
+      </div>
     </div>
   );
 }

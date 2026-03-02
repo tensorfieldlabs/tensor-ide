@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { api, getSession } from "../../api";
+import { api } from "../../api";
 import type { OpenFile } from "../../App";
 
 interface Props {
@@ -10,8 +10,6 @@ interface Props {
   onFileChanged?: (path: string) => void;
   onAgentFile?: (path: string, content: string) => void;
   onAgentCommand?: (cmd: string, output: string) => void;
-  onAgentScreenshot?: (base64: string) => void;
-  onAgentUrl?: (url: string) => void;
 }
 
 type MessageBlock =
@@ -154,7 +152,7 @@ function MessageBubble({ msg }: { msg: Message }) {
 
 const FILE_TOOLS = new Set(["write_file", "edit_file", "append_file"]);
 
-export function TensorPanel({ openFile, hidden, onClose, onFileChanged, onAgentFile, onAgentCommand, onAgentScreenshot, onAgentUrl }: Props) {
+export function TensorPanel({ openFile, hidden, onClose, onFileChanged, onAgentFile, onAgentCommand }: Props) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isThinking, setIsThinking] = useState(false);
@@ -258,7 +256,7 @@ export function TensorPanel({ openFile, hidden, onClose, onFileChanged, onAgentF
 
       const res = await fetch("/api/generate/stream", {
         method: "POST",
-        headers: { "Content-Type": "application/json", ...api.authHeaders() },
+        headers: { "Content-Type": "application/json",  },
         body: JSON.stringify({
           prompt, max_tokens: 4096, temperature: 0.0,
           use_cloud: useCloud, model, conversation_id: convId,
@@ -329,7 +327,7 @@ export function TensorPanel({ openFile, hidden, onClose, onFileChanged, onAgentF
                 if (FILE_TOOLS.has(parsed.tool_end) || parsed.tool_end === "read_file") {
                   fetch("/api/read_file", {
                     method: "POST",
-                    headers: { "Content-Type": "application/json", ...api.authHeaders() },
+                    headers: { "Content-Type": "application/json",  },
                     body: JSON.stringify({ path: toolPath }),
                   }).then(r => r.json()).then(d => {
                     if (d.content !== undefined) onAgentFile?.(toolPath, d.content);
@@ -339,15 +337,6 @@ export function TensorPanel({ openFile, hidden, onClose, onFileChanged, onAgentF
               if (parsed.tool_end === "run_shell") {
                 const cmd = (pendingToolArgs.current?.command as string) ?? "";
                 onAgentCommand?.(cmd, parsed.preview || "");
-              }
-              if (parsed.tool_end === "browser_screenshot" && parsed.preview) {
-                const raw = parsed.preview as string;
-                const b64 = raw.startsWith("IMAGE:") ? raw.slice(6) : raw;
-                if (b64.length > 100) onAgentScreenshot?.(b64);
-              }
-              if (parsed.tool_end === "browser_goto") {
-                const url = (pendingToolArgs.current?.url as string) ?? "";
-                if (url) onAgentUrl?.(url);
               }
             }
           } catch { /* skip */ }

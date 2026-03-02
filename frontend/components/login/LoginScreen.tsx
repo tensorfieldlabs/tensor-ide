@@ -29,12 +29,15 @@ export function LoginScreen({ logoSrc, onLogin, overlay }: Props) {
 
   return (
     <div className={overlay ? "login-overlay" : "login-screen"}>
-      <form className="login-box" onSubmit={handleSubmit}>
+      <form className="login-box" onSubmit={handleSubmit} autoComplete="off">
         <img src={logoSrc} alt="Tensor" className="login-logo" />
         <input
-          type="password"
+          type="text"
+          inputMode="numeric"
           className={`login-input ${error ? "error" : ""}`}
-          placeholder="Password"
+          placeholder="PIN"
+          autoComplete="off"
+          style={{ WebkitTextSecurity: "disc" } as React.CSSProperties}
           value={password}
           onChange={(e) => { setPassword(e.target.value); setError(false); }}
           autoFocus

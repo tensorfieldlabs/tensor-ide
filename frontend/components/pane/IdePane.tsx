@@ -6,36 +6,24 @@ import { Terminal } from "../terminal/Terminal";
 import { TensorPanel } from "../tensor/TensorPanel";
 import { BrowserPanel } from "../browser/BrowserPanel";
 import { api } from "../../api";
+import { langFromPath } from "../../App";
 import type { OpenFile } from "../../App";
-
-function langFromPath(path: string): string {
-  const ext = path.split(".").pop() ?? "";
-  const map: Record<string, string> = {
-    ts: "typescript", tsx: "typescript", js: "javascript", jsx: "javascript",
-    py: "python", rs: "rust", go: "go", json: "json", md: "markdown",
-    css: "css", html: "html", sh: "shell", toml: "toml", yaml: "yaml",
-  };
-  return map[ext] ?? "plaintext";
-}
 
 interface Props {
   initialCwd?: string;
   hideTensor?: boolean;
   variant?: "default" | "agent";
-  onAgentScreenshot?: (base64: string) => void;
-  onAgentUrl?: (url: string) => void;
   onAgentFile?: (path: string, content: string) => void;
   onAgentCommand?: (cmd: string, output: string) => void;
   agentFile?: OpenFile | null;
-  agentCwd?: string;
   agentCommand?: { cmd: string; output: string } | null;
 }
 
 export function IdePane({
   initialCwd = "/Users/reeshogue", hideTensor,
   variant = "default",
-  onAgentScreenshot, onAgentUrl, onAgentFile, onAgentCommand,
-  agentFile, agentCwd, agentCommand,
+  onAgentFile, onAgentCommand,
+  agentFile, agentCommand,
 }: Props) {
   const isAgent = variant === "agent";
 
@@ -85,10 +73,6 @@ export function IdePane({
     setOpenFile(agentFile);
     setExplorerOpen(true);
   }, [isAgent, agentFile]);
-
-  useEffect(() => {
-    if (isAgent && agentCwd) setCwd(agentCwd);
-  }, [isAgent, agentCwd]);
 
   // Inject AI commands into agent terminal
   useEffect(() => {
@@ -180,8 +164,6 @@ export function IdePane({
             onFileChanged={handleFileChanged}
             onAgentFile={onAgentFile}
             onAgentCommand={onAgentCommand}
-            onAgentScreenshot={onAgentScreenshot}
-            onAgentUrl={onAgentUrl}
           />
         )}
         {isAgent && <BrowserPanel />}

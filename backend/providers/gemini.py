@@ -16,8 +16,14 @@ from . import Provider, sse_delta, sse_tool_start, sse_tool_end, sse_thinking_de
 _CREDS_PATH = Path.home() / ".gemini" / "oauth_creds.json"
 _CODE_ASSIST_ENDPOINT = "https://cloudcode-pa.googleapis.com"
 _CODE_ASSIST_VERSION = "v1internal"
-_OAUTH_CLIENT_ID = ""      # set via ~/.gemini/client_id
-_OAUTH_CLIENT_SECRET = ""  # set via ~/.gemini/client_secret
+def _read_secret(name: str) -> str:
+    try:
+        return (Path.home() / ".gemini" / name).read_text().strip()
+    except (FileNotFoundError, OSError):
+        return ""
+
+_OAUTH_CLIENT_ID = _read_secret("client_id")
+_OAUTH_CLIENT_SECRET = _read_secret("client_secret")
 
 _MODEL_CANDIDATES = [
     "gemini-3.1-pro-preview",

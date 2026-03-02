@@ -13,7 +13,7 @@ from pathlib import Path
 import uvicorn
 from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, Response
+from fastapi.responses import FileResponse, JSONResponse, Response
 
 from backend.files     import router as files_router
 from backend.shell     import router as shell_router
@@ -32,6 +32,7 @@ _ALLOWED_ORIGINS = [
     "http://127.0.0.1:41900",
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    "https://ide.reeshogue.com",
 ]
 
 _PIN_FILE   = Path.home() / ".tensor" / "ide_pin"
@@ -50,49 +51,6 @@ def _load_pin() -> str:
     return pin
 
 _PIN = _load_pin()
-
-# ── Login HTML ─────────────────────────────────────────────────────────────────
-
-_LOGIN_HTML = """<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>tensor-ide</title>
-<style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{background:#0d0d0d;color:#e0e0e0;font-family:monospace;display:flex;
-       align-items:center;justify-content:center;height:100dvh}
-  .card{background:#141414;border:1px solid #222;border-radius:10px;
-        padding:2.5rem 2rem;width:min(340px,90vw);display:flex;flex-direction:column;gap:1.2rem}
-  h1{font-size:1.1rem;font-weight:600;letter-spacing:.02em}
-  input{background:#0d0d0d;border:1px solid #333;border-radius:6px;color:#e0e0e0;
-        font-family:monospace;font-size:1rem;padding:.65rem .9rem;width:100%;outline:none}
-  input:focus{border-color:#555}
-  button{background:#222;border:1px solid #333;border-radius:6px;color:#e0e0e0;
-         cursor:pointer;font-family:monospace;font-size:.95rem;padding:.65rem;width:100%}
-  button:hover{background:#2a2a2a}
-  .err{color:#e05c5c;font-size:.85rem;min-height:1.1em}
-</style>
-</head>
-<body>
-<div class="card">
-  <h1>tensor-ide</h1>
-  <input id="pin" type="password" placeholder="PIN" autocomplete="current-password">
-  <button onclick="login()">unlock</button>
-  <div class="err" id="err"></div>
-</div>
-<script>
-  document.getElementById('pin').addEventListener('keydown',e=>{if(e.key==='Enter')login()});
-  async function login(){
-    const pin=document.getElementById('pin').value;
-    const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin})});
-    if(r.ok){location.reload();}
-    else{const d=await r.json().catch(()=>({}));document.getElementById('err').textContent=d.detail||'incorrect PIN';}
-  }
-</script>
-</body>
-</html>"""
 
 # ── Auth middleware ────────────────────────────────────────────────────────────
 
@@ -127,7 +85,8 @@ async def auth_middleware(request: Request, call_next):
         return await call_next(request)
     if path.startswith("/api/"):
         return JSONResponse({"detail": "unauthorized"}, status_code=401)
-    return HTMLResponse(_LOGIN_HTML)
+    # Let unauthenticated users reach the React app — it handles login UI
+    return await call_next(request)
 
 
 # ── Auth endpoints ─────────────────────────────────────────────────────────────

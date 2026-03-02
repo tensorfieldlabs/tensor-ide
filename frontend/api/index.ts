@@ -29,14 +29,6 @@ export const api = {
     post<{ ok?: boolean; error?: string }>("/write_file", { path, content }),
   runShell: (command: string, cwd?: string) =>
     post<{ output: string; code: number }>("/run_shell", { command, cwd }),
-  generate: (prompt: string, max_tokens = 2048, temperature = 0.0, use_cloud = true, model = "gpt-5.3-codex") =>
-    post<{ result?: string; error?: string }>("/generate", {
-      prompt, max_tokens, temperature, use_cloud, model,
-    }),
-  search: (query: string, max_results = 6) =>
-    post<{ results?: string; error?: string }>("/search", { query, max_results }),
-  fetchUrl: (url: string, max_chars = 8000) =>
-    post<{ content?: string; error?: string }>("/fetch", { url, max_chars }),
   getModels: () => get<{ models: { id: string; provider: string }[] }>("/models"),
   listConversations: () => get<{ conversations: string[] }>("/conversations"),
   getConversation: (id: string) =>
@@ -44,14 +36,6 @@ export const api = {
   deleteConversation: async (id: string) => {
     await fetch(`${BASE}/conversations/${encodeURIComponent(id)}`, { method: "DELETE" });
   },
-  getTopics: () =>
-    get<{ topics: { topic: string; conversations: string[] }[]; titles: Record<string, string> }>("/conversations/topics/grouped"),
-  setConversationTitle: (id: string, title: string) =>
-    fetch(`/api/conversations/${encodeURIComponent(id)}/title`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title }),
-    }),
   login: async (pin: string): Promise<boolean> => {
     const res = await fetch(`${BASE}/login`, {
       method: "POST",
