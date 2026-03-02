@@ -1,6 +1,28 @@
+<div align="center">
+
+<img src="public/hogue.svg" width="64" alt="tensor-ide logo" />
+
 # tensor-ide
 
-A self-hosted AI IDE by [Tensorfield Labs](https://tensorfieldlabs.com).
+**A self-hosted AI IDE by [Tensorfield Labs](https://tensorfieldlabs.com)**
+
+![Python](https://img.shields.io/badge/python-3.12+-blue?style=flat-square)
+![React](https://img.shields.io/badge/react-19-61dafb?style=flat-square&logo=react&logoColor=black)
+![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)
+
+</div>
+
+---
+
+## Features
+
+- **AI chat** — Claude, Gemini, Groq, Ollama with tool use
+- **Code editor** — Monaco with syntax highlighting
+- **Terminal** — WebSocket PTY
+- **File explorer** — full filesystem access
+- **Browser** — embedded CDP headless Chromium
+- **Pair mode** — dual IDE panes with agent + human side by side
+- **ML viewers** — images, video, CSV, Jupyter notebooks, GGUF/safetensors
 
 ## Setup
 
@@ -28,9 +50,11 @@ pnpm run dev:runtime
 
 ## Stack
 
-- **Backend**: FastAPI + uvicorn
-- **Frontend**: React + Vite + Monaco
-- **AI**: Claude, Gemini, Groq, Ollama
-- **Terminal**: WebSocket PTY
-- **Browser**: CDP headless Chromium
-- **Auth**: PIN-based, 12-hour sessions, rate limited
+| Layer | Tech |
+|-------|------|
+| Backend | FastAPI + uvicorn |
+| Frontend | React + Vite + Monaco |
+| AI | Claude, Gemini, Groq, Ollama |
+| Terminal | WebSocket PTY |
+| Browser | CDP headless Chromium |
+| Auth | PIN-based, 12-hour sessions |
