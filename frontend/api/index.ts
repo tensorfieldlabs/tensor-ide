@@ -52,4 +52,14 @@ export const api = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title }),
     }),
+  login: async (pin: string): Promise<boolean> => {
+    const res = await fetch(`${BASE}/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ pin }),
+    });
+    return res.ok;
+  },
+  logout: () => post<{ ok: boolean }>("/logout", {}),
+  authStatus: () => get<{ authed: boolean }>("/auth_status"),
 };

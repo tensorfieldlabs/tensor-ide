@@ -5,6 +5,7 @@ import { Terminal } from "./components/terminal/Terminal";
 import { Titlebar } from "./components/titlebar/Titlebar";
 import { TensorPanel } from "./components/tensor/TensorPanel";
 import { IdePane } from "./components/pane/IdePane";
+import { LoginScreen } from "./components/login/LoginScreen";
 import { api } from "./api";
 import { useLiveLogoSrc } from "./logo";
 import "./styles/App.css";
@@ -34,9 +35,25 @@ function detectPhone(): boolean {
 const IS_PHONE = detectPhone();
 
 export default function App() {
+  const [authed, setAuthed] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
+  const [sessionExpired, setSessionExpired] = useState(false);
   const [openFile, setOpenFile] = useState<OpenFile | null>(null);
   const [cwd, setCwd] = useState("/");
   const logoSrc = useLiveLogoSrc();
+
+  useEffect(() => {
+    api.authStatus().then(r => {
+      setAuthed(r.authed);
+      setAuthChecked(true);
+    }).catch(() => setAuthChecked(true));
+  }, []);
+
+  useEffect(() => {
+    const handler = () => setSessionExpired(true);
+    window.addEventListener("hogue:session-expired", handler);
+    return () => window.removeEventListener("hogue:session-expired", handler);
+  }, []);
   const [termOpen, setTermOpen] = useState(!IS_PHONE && window.innerHeight >= 600);
   const [explorerOpen, setExplorerOpen] = useState(!IS_PHONE && window.innerWidth >= 800);
   const [tensorOpen, setTensorOpen] = useState(IS_PHONE || window.innerWidth >= 1100);
@@ -102,6 +119,9 @@ export default function App() {
     });
   }
 
+  if (!authChecked) return null;
+  if (!authed) return <LoginScreen logoSrc={logoSrc} onLogin={() => setAuthed(true)} />;
+
   if (IS_PHONE) {
     return (
       <div className="ide phone">
@@ -112,6 +132,7 @@ export default function App() {
 
   return (
     <div className="ide">
+      {sessionExpired && <LoginScreen logoSrc={logoSrc} onLogin={() => { setAuthed(true); setSessionExpired(false); }} overlay />}
       <Titlebar
         logoSrc={logoSrc}
         termOpen={termOpen}
